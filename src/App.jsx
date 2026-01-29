@@ -9,8 +9,6 @@ function App() {
   const [filteredGenre, setFilteredGenre] = useState(movie);   // State per la lista filtrata dei film (risultato della ricerca)
   const [searchedGenre, setSearchedGenre] = useState('');     // State per il testo di ricerca inserito 
 
-  const [filteredMovie, setFilteredMovie] = useState(movie);
-  const [searchedText, setSearchedText] = useState('');
 
   // Effetto che si attiva ogni volta che l'utente modifica la ricerca
   //()cosa fare, []quando farlo
@@ -25,18 +23,25 @@ function App() {
   }, [searchedGenre]);  // Si riesegue quando searchedGenre(nel input) cambia
 
 
+  //////////////////////////BONUS//////////////////////////////
+
+  const [filteredMovie, setFilteredMovie] = useState(movie);
+  const [searchedText, setSearchedText] = useState('');
 
   useEffect(() => {
     const searched = movies.filter(movie => {
       // Cerca sia nel genere che nel titolo
       const searchedTitle = movie.title.toLowerCase().includes(searchedText.toLowerCase());
       const searchedGenre = movie.genre.toLowerCase().includes(searchedText.toLowerCase());
+      //Restituisce la corrispondenza trovata
       return searchedTitle || searchedGenre;
     }
     )
     setFilteredMovie(searched)
     console.log(filteredMovie)
   }, [searchedText]);
+
+  /////////////////////////////////////////////
 
   return (
     <>
@@ -45,19 +50,17 @@ function App() {
           <div className="col-3">
             <form className="d-flex" role="search">
               <input className="form-control me-2" value={searchedGenre} onChange={e => setSearchedGenre(e.target.value)} type="search" placeholder="Search by Genre" aria-label="Search" />
-              {/* <button className="btn btn-outline-warning" type="submit">Search</button> */}
             </form>
           </div>
           <div className="col-3">
             <form className="d-flex" role="search">
               <input className="form-control me-2" value={searchedText} onChange={e => setSearchedText(e.target.value)} type="search" placeholder="Search" aria-label="Search" />
-              {/* <button className="btn btn-outline-warning" type="submit">Search</button> */}
             </form>
           </div>
         </div>
       </nav>
 
-      {/* <div className='container my-4 py-4'>
+      {searchedGenre && <div className='container my-4 py-4'>
         <div className='row gy-4'>
           {filteredGenre.map((movie, i) =>
             <div key={i} className="card-body col-4">
@@ -65,16 +68,18 @@ function App() {
               <p className="card-text">{movie.genre}</p>
             </div>)}
         </div>
-      </div> */}
-      <div className='container my-4 py-4'>
-        <div className='row gy-4'>
-          {filteredMovie.map((movie, i) =>
-            <div key={i} className="card-body col-4">
-              <h3 className="card-title">{movie.title}</h3>
-              <p className="card-text">{movie.genre}</p>
-            </div>)}
-        </div>
-      </div>
+      </div>}
+
+      {!searchedGenre &&
+        (< div className='container my-4 py-4'>
+          <div className='row gy-4'>
+            {filteredMovie.map((movie, i) =>
+              <div key={i} className="card-body col-4">
+                <h3 className="card-title">{movie.title}</h3>
+                <p className="card-text">{movie.genre}</p>
+              </div>)}
+          </div>
+        </div >)}
     </>
   )
 }
